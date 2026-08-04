@@ -1,0 +1,35 @@
+name: İndirim Botu Tarama
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu çek
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bağımlılıkları kur
+        run: pip install -r requirements.txt
+
+      - name: Botu çalıştır
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+        run: python run_once.py
+
+      - name: Paylaşılan ürün listesini kaydet
+        run: |
+          git config user.name "indirim-botu"
+          git config user.email "actions@github.com"
+          git add posted_deals.json
+          git diff --staged --quiet || git commit -m "posted_deals.json güncellendi"
+          git push
