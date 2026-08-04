@@ -24,7 +24,7 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
-        run: python run_once.py
+        run: python test_post.py
 
       - name: Paylaşılan ürün listesini kaydet
         run: |
